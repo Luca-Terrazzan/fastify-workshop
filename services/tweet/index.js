@@ -11,8 +11,25 @@ async function statusService (fastify, opts) {
     path: '/tweet',
     handler: onTweet,
     schema: {
+      body: S.object()
+        .prop('message', S.string().required())
+        .prop('user', S.string().required()),
       response: {
-        200: S.object().prop('tweet_id', S.string())
+        200: S.object().prop('tweet_id', S.string().required())
+      }
+    }
+  })
+
+  fastify.route({
+    method: 'GET',
+    path: '/tweet',
+    handler: onTweetGet,
+    schema: {
+      body: S.object()
+        .prop('message', S.string().required())
+        .prop('user', S.string().required()),
+      response: {
+        200: S.object().prop('tweet_id', S.string().required())
       }
     }
   })
@@ -31,6 +48,14 @@ async function statusService (fastify, opts) {
         time: new Date(),
         topics: [ req.body.topic ]
       }
+    })
+
+    return { tweet_id: id }
+  }
+
+  async function onTweetGet(req, reply) {
+    await this.elastic.search({
+
     })
 
     return { tweet_id: id }
