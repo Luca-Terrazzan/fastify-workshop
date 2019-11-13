@@ -1,17 +1,22 @@
 'use strict'
 
-module.exports = function (fastify, opts, next) {
-  fastify.get('/status', function (request, reply) {
-    reply.send({ status: 'ok' })
+const S = require('fluent-schema')
+
+async function statusService (fastify, opts) {
+  fastify.route({
+    method: 'GET',
+    path: '/status',
+    handler: onStatus,
+    schema: {
+      response: {
+        200: S.object().prop('status', S.string())
+      }
+    }
   })
 
-  next()
+  async function onStatus (req, reply) {
+    return { status: 'ok' }
+  }
 }
 
-// If you prefer async/await, use the following
-//
-// module.exports = async function (fastify, opts) {
-//   fastify.get('/example', async function (request, reply) {
-//     return 'this is an example'
-//   })
-// }
+module.exports = statusService

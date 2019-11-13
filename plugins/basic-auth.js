@@ -18,6 +18,7 @@ async function basicAuthPlugin (fastify, opts) {
 
   fastify.decorateRequest('user', null)
 
+
   // The headers parsing is handled by the basicAuth plugin
   // we only need to validate the username and password.
   // If username or password are not valid, we'll throw
@@ -26,7 +27,6 @@ async function basicAuthPlugin (fastify, opts) {
     if (users[username] !== password) {
       return new Error('Invalid username or password')
     }
-
     req.user = {
       name: username,
       topics: username === 'arya'
